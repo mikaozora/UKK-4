@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mysql2": "^2.3.0",
+    "sequelize": "^6.6.5"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.2.0"
+  },
+  "name": "back-end-ukk4-bidding-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikaozora/UKK-4.git"
+  },
+  "author": "PT Senang Ngoding",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mikaozora/UKK-4/issues"
+  },
+  "homepage": "https://github.com/mikaozora/UKK-4#readme",
+  "description": ""
+}
