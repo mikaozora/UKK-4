@@ -5,6 +5,7 @@ app.use(express.urlencoded({ extended: true }))
 
 const models = require("../models/index")
 const tb_barang = models.tb_barang
+const current = new Date().toISOString().split('T')[0]
 
 app.get("/", async (req, res) => {
     await tb_barang.findAll()
@@ -40,7 +41,7 @@ app.post("/", async (req, res) => {
         nama_barang: req.body.nama_barang,
         harga_awal: req.body.harga_awal,
         deskripsi_barang: req.body.deskripsi_barang,
-        tgl: Date.now()
+        tgl: current
     }
     await tb_barang.create(data)
         .then(result => {
@@ -63,7 +64,7 @@ app.put("/", async (req, res) => {
         nama_barang: req.body.nama_barang,
         harga_awal: req.body.harga_awal,
         deskripsi_barang: req.body.deskripsi_barang,
-        tgl: Date.now()
+        tgl: current
     }
     await tb_barang.update(data, { where: param })
         .then(result => {

@@ -43,7 +43,7 @@ app.post("/", async(req, res) => {
     .then(result => {
         res.json({
             data: result,
-            message: "data berhasil ditambahkan"
+            message: "Data berhasil ditambahkan"
         })
     }).catch(err => {
         res.json({
@@ -66,7 +66,7 @@ app.put("/", async(req, res) => {
                 id_level: param.id_level,
                 level: data.level
             },
-            message: "data berhasil diupdate"
+            message: "Data berhasil diupdate"
         })
     }).catch(err => {
         res.json({
@@ -82,7 +82,7 @@ app.delete("/:id", async(req, res) => {
     await tb_level.destroy({where:param})
     .then(result => {
         res.json({
-            message: "data berhasil dihapus"
+            message: "Data berhasil dihapus"
         })
     }).catch(err => {
         res.json({

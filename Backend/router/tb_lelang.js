@@ -1,6 +1,6 @@
 const express = require("express")
 const multer = require("multer")
-const { ENUM } = require("sequelize/types")
+// const { ENUM } = require("sequelize/types")
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -61,47 +61,47 @@ app.post("/", async (req, res) => {
             })
         })
 
-    app.put("/", async (req, res) => {
-        let param = {
-            id_lelang: req.params.id_lelang
-        }
-        let data = {
-            id_barang: req.body.id_barang,
-            tgl_lelang: current,
-            harga_akhir: req.body.harga_akhir,
-            id_user: req.body.id_user,
-            id_petugas: req.body.id_petugas,
-            status: ENUM("dibuka", "ditutup")
-        }
-        tb_lelang.update(data, { where: param })
-            .then(result => {
-                res.json({
-                    message: "Data has been Update",
-                    data: result
-                })
+})
+app.put("/", async (req, res) => {
+    let param = {
+        id_lelang: req.params.id_lelang
+    }
+    let data = {
+        id_barang: req.body.id_barang,
+        tgl_lelang: current,
+        harga_akhir: req.body.harga_akhir,
+        id_user: req.body.id_user,
+        id_petugas: req.body.id_petugas,
+        status: ENUM("dibuka", "ditutup")
+    }
+    tb_lelang.update(data, { where: param })
+        .then(result => {
+            res.json({
+                message: "Data has been Update",
+                data: result
             })
-            .catch(error => {
-                res.json({
-                    message: error.message
-                })
+        })
+        .catch(error => {
+            res.json({
+                message: error.message
             })
-    })
+        })
 })
 
-app.delete("/:id_lelang",async (req,res)=>{
-    let param ={
-        id_lelang:req.params.id_lelang
+app.delete("/:id_lelang", async (req, res) => {
+    let param = {
+        id_lelang: req.params.id_lelang
     }
-    tb_lelang.destroy({where:param})
-    .then(result=>{
-        res.json({
-            message:"Data has been Delete"
+    tb_lelang.destroy({ where: param })
+        .then(result => {
+            res.json({
+                message: "Data has been Delete"
+            })
         })
-    })
-    .catch(error=>{
-        res.json({
-            message:error.message
+        .catch(error => {
+            res.json({
+                message: error.message
+            })
         })
-    })
 })
 module.exports = app
