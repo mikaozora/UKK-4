@@ -26,7 +26,7 @@ app.get("/",async (req,res)=>{
 
 app.get("/:id",async (req,res)=>{
     const param = {
-        id_history:req.param.id_history
+        id_history:req.params.id_history
     }
     tb_history_lelang.findOne({where:param})
     .then(result => {
@@ -64,7 +64,7 @@ app.post("/",async (req,res)=>{
 
 app.put("/",async (req,res)=>{
     const param ={
-        id_history:req.body.id_lelang
+        id_history:req.params.id_lelang
     }
     const data ={
         id_lelang:req.body.id_lelang,
@@ -88,7 +88,7 @@ app.put("/",async (req,res)=>{
 
 app.delete("/:id_history",async (req,res)=>{
     const param ={
-        id_history : req.body.id_history
+        id_history : req.params.id_history
     }
     tb_history_lelang.destroy({where:param})
     .then(result=>{
