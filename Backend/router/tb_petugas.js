@@ -29,7 +29,7 @@ app.get("/", async (req, res) => {
 
 app.get("/:id", async (req, res) => {
     const param = {
-        id_petugas: req.params.id
+        id_petugas: req.param.id
     }
     await tb_petugas.findOne({ where: param })
         .then(result => {
