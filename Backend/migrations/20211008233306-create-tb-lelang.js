@@ -40,6 +40,7 @@ module.exports = {
             },
             status: {
                 type: Sequelize.ENUM("Dibuka", "Ditutup"),
+                defaultValue: "Ditutup",
             },
             createdAt: {
                 allowNull: false,
