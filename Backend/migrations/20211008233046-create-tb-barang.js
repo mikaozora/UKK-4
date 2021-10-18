@@ -1,6 +1,6 @@
 "use strict"
 module.exports = {
-    up: async(queryInterface, Sequelize) => {
+    up: async (queryInterface, Sequelize) => {
         await queryInterface.createTable("tb_barang", {
             id_barang: {
                 allowNull: false,
@@ -20,7 +20,11 @@ module.exports = {
             deskripsi_barang: {
                 type: Sequelize.STRING,
             },
-            createdAt: {
+            image: {
+                type: Sequelize.STRING,
+                allowNull: true
+            }
+            , createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE,
             },
@@ -30,7 +34,7 @@ module.exports = {
             },
         })
     },
-    down: async(queryInterface, Sequelize) => {
+    down: async (queryInterface, Sequelize) => {
         await queryInterface.dropTable("tb_barang")
     },
 }

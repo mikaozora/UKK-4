@@ -7,11 +7,10 @@ app.use(express.urlencoded({ extended: true }))
 
 const models = require("../models/index")
 const tb_lelang = models.tb_lelang
+const tb_history = models.history_lelang
 
 app.get("/", async (req, res) => {
-    tb_lelang.findAll({
-        include: ["tb_barang", "tb_petugas", "tb_masyarakat"]
-    })
+    await tb_lelang.findAll()
         .then(result => {
             res.json({
                 data: result
@@ -25,7 +24,7 @@ app.get("/", async (req, res) => {
 })
 app.get("/:id", async (req, res) => {
     const param = {
-        id_lelang: req.params.id_lelang
+        id_lelang: req.params.id
     }
     await tb_lelang.findOne({ where: param })
         .then(result => {
@@ -46,12 +45,12 @@ app.post("/", async (req, res) => {
         harga_akhir: req.body.harga_akhir,
         id_user: req.body.id_user,
         id_petugas: req.body.id_petugas,
-        status: ENUM("dibuka", "ditutup")
+        status: req.body.status 
     }
     tb_lelang.create(data)
-    then(result => {
+    .then(result => {
         res.json({
-            message: "Data has been Insert",
+            message: "Data berhasil ditambahkan",
             data: result
         })
     })

@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
         tgl: DataTypes.DATE,
         harga_awal: DataTypes.INTEGER,
         deskripsi_barang: DataTypes.STRING,
+        image:DataTypes.STRING,
     }, {
         sequelize,
         modelName: "tb_barang",

@@ -7,6 +7,7 @@ app.use(express.urlencoded({ extended: true }))
 
 const models = require("../models/index")
 const tb_petugas = models.tb_petugas
+const tb_level = models.tb_level
 
 const md5 = require("md5")
 const auth = require("../auth")
@@ -119,7 +120,6 @@ app.post("/petugas/login", async (req, res) => {
         password: md5(req.body.password),
         id_level: "2"
     }
-
     let result = await tb_petugas.findOne({ where: param })
     if (result) {
         let payload = JSON.stringify(result)
@@ -162,4 +162,6 @@ app.post("/admin/login", async (req, res) => {
         })
     }
 })
+
+
 module.exports = app
