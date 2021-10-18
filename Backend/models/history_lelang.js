@@ -9,29 +9,20 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            this.belongsTo(models.tb_lelang, {
+            this.belongsTo(models.lelang, {
                 foreignKey: "id_lelang",
                 as: "lelang",
-            })
-            this.belongsTo(models.tb_barang, {
-                foreignKey: "id_barang",
-                as: "barang",
-            })
-            this.belongsTo(models.tb_masyarakat, {
-                foreignKey: "id_user",
-                as: "user",
             })
         }
     }
     history_lelang.init({
-        id_history: {
+        id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
         },
         id_lelang: DataTypes.INTEGER,
-        id_barang: DataTypes.INTEGER,
-        id_user: DataTypes.INTEGER,
+        id_masyarakat: DataTypes.INTEGER,
         penawaran_harga: DataTypes.INTEGER,
     }, {
         sequelize,

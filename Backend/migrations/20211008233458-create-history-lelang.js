@@ -2,7 +2,7 @@
 module.exports = {
     up: async(queryInterface, Sequelize) => {
         await queryInterface.createTable("history_lelang", {
-            id_history: {
+            id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
@@ -12,24 +12,8 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 allowNull: false,
                 references: {
-                    model: "tb_lelang",
-                    key: "id_lelang",
-                },
-            },
-            id_barang: {
-                type: Sequelize.INTEGER,
-                allowNull: false,
-                references: {
-                    model: "tb_barang",
-                    key: "id_barang",
-                },
-            },
-            id_user: {
-                type: Sequelize.INTEGER,
-                allowNull: false,
-                references: {
-                    model: "tb_masyarakat",
-                    key: "id_user",
+                    model: "lelang",
+                    key: "id",
                 },
             },
             penawaran_harga: {

@@ -5,12 +5,12 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 
-const models = require("../models/index")
-const tb_history_lelang = models.tb_history_lelang
+const history_lelang = require("../models/index").history_lelang
+
 
 app.get("/",async (req,res)=>{
-    tb_history_lelang.findAll({
-        include:["tb_masyarakat","tb_lelang","tb_barang"]
+    history_lelang.findAll({
+        include:["masyarakat","lelang","barang"]
     })
     .then(result => {
         res.json({
@@ -28,7 +28,7 @@ app.get("/:id",async (req,res)=>{
     const param = {
         id_history:req.params.id_history
     }
-    tb_history_lelang.findOne({where:param})
+    history_lelang.findOne({where:param})
     .then(result => {
         res.json({
             data: result
@@ -45,10 +45,10 @@ app.post("/",async (req,res)=>{
     const data ={
         id_lelang:req.body.id_lelang,
         id_barang:req.body.id_barang,
-        id_user:req.body.id_user,
+        id_masyarakat:req.body.id_masyarakat,
         penawaran_harga:req.body.penawaran_harga
     }
-    tb_history_lelang.create(data)
+    history_lelang.create(data)
     .then(result => {
         res.json({
             message: "Data has been Insert",
@@ -64,15 +64,15 @@ app.post("/",async (req,res)=>{
 
 app.put("/",async (req,res)=>{
     const param ={
-        id_history:req.params.id_lelang
+        id:req.params.id
     }
     const data ={
         id_lelang:req.body.id_lelang,
         id_barang:req.body.id_barang,
-        id_user:req.body.id_user,
+        id_masyarakat:req.body.id_masyarakat,
         penawaran_harga:req.body.penawaran_harga
     }
-    tb_history_lelang.update(data,{where:param})
+    history_lelang.update(data,{where:param})
     .then(result => {
         res.json({
             message: "Data has been Update",
@@ -90,7 +90,7 @@ app.delete("/:id_history",async (req,res)=>{
     const param ={
         id_history : req.params.id_history
     }
-    tb_history_lelang.destroy({where:param})
+    history_lelang.destroy({where:param})
     .then(result=>{
         res.json({
             message:"Data has been Delete"
