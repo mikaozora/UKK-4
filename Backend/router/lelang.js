@@ -7,9 +7,10 @@ app.use(express.urlencoded({ extended: true }))
 
 const lelang = require("../models/index").lelang
 const history_lelang = require("../models/index").history_lelang
+const auth = require("../auth")
 
 
-app.get("/", async (req, res) => {
+app.get("/", auth, async (req, res) => {
     await lelang.findAll()
         .then(result => {
             res.json({

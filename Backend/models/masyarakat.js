@@ -10,10 +10,10 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             // define association here
             this.hasMany(models.history_lelang, {
-                foreignKey: "id_user",
+                foreignKey: "id_masyarakat",
             })
             this.hasMany(models.lelang, {
-                foreignKey: "id_user",
+                foreignKey: "id_masyarakat",
             })
         }
     }

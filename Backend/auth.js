@@ -8,7 +8,8 @@ auth = (req,res,next) =>{
     let token = header && header.split(" ")[1]
 
     let jwtHeader ={
-        algorithm: "HS256"
+        algorithm: "HS256",
+        expiresIn: "1m"
     }
     if (token == null) {
         res.status(401).json({message : "Unauthorization"})
@@ -38,7 +39,7 @@ authMasyarakat = (req,res,next) =>{
     if (token == null) {
         res.status(401).json({message : "Unauthorization"})
     }else{
-        jwt.verify(token, SECRET_KEY, jwtHeader, (error,user) => {
+        jwt.verify(token, SECRET_MASYARAKAT, jwtHeader, (error,user) => {
             if (error) {
                 res
                 .status(401)
