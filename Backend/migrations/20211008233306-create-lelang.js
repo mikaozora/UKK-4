@@ -22,7 +22,7 @@ module.exports = {
             harga_akhir: {
                 type: Sequelize.INTEGER,
             },
-            id_masyrakat: {
+            id_masyarakat: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
                 references: {
