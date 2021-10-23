@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: "id_lelang",
                 as: "lelang",
             })
+            this.belongsTo(models.masyarakat, {
+                foreignKey: "id_masyarakat",
+                as: "masyarakat",
+            })
         }
     }
     history_lelang.init({

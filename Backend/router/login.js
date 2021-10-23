@@ -2,7 +2,7 @@ const express = require("express")
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-const SECRET_KEY = "hoi"
+const SECRET_KEY = "Lelang"
 const model = require("../models/index")
 const petugas = model.petugas
 const masyarakat = model.masyarakat
@@ -10,11 +10,11 @@ const masyarakat = model.masyarakat
 const md5 = require("md5")
 const jwt = require("jsonwebtoken")
 
-app.post("/", async(req, res) => {
+
+app.post("/", async (req, res) => {
     const param = {
         username: req.body.username,
-        password: md5(req.body.password),
-        level,
+        password: md5(req.body.password)
     }
     let result
     if (
@@ -23,14 +23,14 @@ app.post("/", async(req, res) => {
         req.body.level == undefined
     ) {
         result = await masyarakat.findOne({ where: param })
-        console.log("masyara")
+        SECRET_KEY = "hoi"
     } else if (req.body.level == "petugas" || req.body.level == "admin") {
         param.level = req.body.level
         result = await petugas.findOne({ where: param })
     }
     if (result) {
         let payload = JSON.stringify(result)
-            // generate token
+        // generate token
         let token = jwt.sign(payload, SECRET_KEY)
         res.json({
             logged: true,

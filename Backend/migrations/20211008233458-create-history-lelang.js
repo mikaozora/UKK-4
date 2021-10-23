@@ -16,6 +16,15 @@ module.exports = {
                     key: "id",
                 },
             },
+            id_masyarakat: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                references: {
+                    model: "masyarakat",
+                    key: "id",
+                },
+            },
+            
             penawaran_harga: {
                 type: Sequelize.INTEGER,
             },
