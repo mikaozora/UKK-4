@@ -1,0 +1,15 @@
+[{
+        "nama_barang": "laptop mahal",
+        "tgl_daftar": 1634955658652,
+        "image": "-",
+        "harga_awal": 2000000,
+        "deskripsi": "gausah dibeli kemahalan"
+    },
+    {
+        "nama_barang": "permen karet bekas sir alex ferguson",
+        "tgl_daftar": 1634955658652,
+        "image": "-",
+        "harga_awal": 20000000,
+        "deskripsi": "lorem ipsum dolor sit amet"
+    }
+]

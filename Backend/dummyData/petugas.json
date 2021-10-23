@@ -1,0 +1,13 @@
+[{
+        "nama_petugas": "Raihan F",
+        "username": "RRHAN",
+        "password": "123",
+        "level": "admin"
+    },
+    {
+        "nama_petugas": "Mika",
+        "username": "Mika",
+        "password": "123",
+        "level": "petugas"
+    }
+]
