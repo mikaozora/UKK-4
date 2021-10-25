@@ -1,0 +1,17 @@
+[{
+        "id_barang": 1,
+        "tgl_lelang": 1634955658652,
+        "harga_akhir": 3000000,
+        "id_petugas": 1,
+        "status": "ditutup",
+        "id_masyarakat": 1
+    },
+    {
+        "id_barang": 2,
+        "tgl_lelang": 1634955658652,
+        "harga_akhir": 4000000,
+        "id_petugas": 2,
+        "status": "ditutup",
+        "id_masyarakat": 2
+    }
+]

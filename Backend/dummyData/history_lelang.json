@@ -1,0 +1,11 @@
+[{
+        "id_lelang": 1,
+        "id_masyarakat": 1,
+        "penawaran_harga": 5000000
+    },
+    {
+        "id_lelang": 2,
+        "id_masyarakat": 2,
+        "penawaran_harga": 54000000
+    }
+]
