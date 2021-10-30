@@ -9,11 +9,16 @@ const CronJob = require('cron').CronJob;
 const lelang = require("../models/index").lelang
 const history_lelang = require("../models/index").history_lelang
 const status = require('http-status');
+const redis = require("../redis")
 
 const checkLastPrice = async(time,timestamp,id) => {
-    const job = new CronJob(time, async () => {
-            const data = await history_lelang.findAll({where:{id:id}})
-            const result = await lelang.findOne({where:{id:id}})
+    let job = new CronJob(time, async () => {
+            let result = await history_lelang.findAll({where:{id_lelang:id}})
+            const data = []
+            result.forEach(element => {
+                data.push(element.dataValues)
+            });
+            result = await lelang.findOne({where:{id:id}})
             const {harga_akhir} = result.dataValues 
             const now = new Date().getTime()
             let max = harga_akhir,id_masyarakat = null,before = harga_akhir
@@ -25,18 +30,18 @@ const checkLastPrice = async(time,timestamp,id) => {
 
             if(data){
                 data.forEach(e=>{
-                    if(e.price > max){
+                    if(e.penawaran_harga > max){
                         max = e.penawaran_harga
                         id_masyarakat = e.id_masyarakat
                     }
                 })
-                
+                if(max > before){
                     await lelang.update({harga_akhir:max,id_masyarakat:id_masyarakat},{where:{id:id}})
-                
+                }
             }
-        
     });      
     job.start()
+    return job
 }
 
 app.put("/:id/start",async(req,res)=>{
@@ -44,8 +49,10 @@ app.put("/:id/start",async(req,res)=>{
     const now = new Date(),hours = now.setHours(now.getHours() + 1)
     temp.status = LelangStatus.DIBUKA
     temp.tgl_lelang = now
+    redis.set(`${temp.id}`,`${hours}`,'EX',3600)
     await lelang.update(temp,{where:{id:temp.id}})
     await checkLastPrice('*/30 * * * * *',hours,temp.id) // cek and update lelang
+    res.status(200).send("lelang started")
 })
 
 app.post("/bid", async (req, res) => {
@@ -186,4 +193,4 @@ app.delete("/:id_lelang", async (req, res) => {
             })
         })
 })
-module.exports = app
+module.exports = {lelang:app,check:checkLastPrice}

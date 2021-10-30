@@ -1,13 +1,13 @@
 [{
         "nama_petugas": "Raihan F",
         "username": "RRHAN",
-        "password": "123",
+        "password": "202cb962ac59075b964b07152d234b70",
         "level": "admin"
     },
     {
         "nama_petugas": "Mika",
         "username": "Mika",
-        "password": "123",
+        "password": "202cb962ac59075b964b07152d234b70",
         "level": "petugas"
     }
 ]
