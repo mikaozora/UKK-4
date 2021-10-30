@@ -1,6 +1,5 @@
 const models = require('../models/index'),
     barang = require('./barang.json'),
-    history_lelang = require('./history_lelang.json'),
     lelang = require('./lelang.json'),
     masyarakat = require('./masyarakat.json'),
     petugas = require('./petugas.json')
@@ -22,8 +21,5 @@ addData = () => {
     console.log("insering table lelang :")
     res_lelang ? console.log('success') : console.log("failed")
 
-    let res_history_lelang = models.history_lelang.bulkCreate(history_lelang)
-    console.log("insering table history_lelang :")
-    res_history_lelang ? console.log('success') : console.log("failed")
 }
 addData()

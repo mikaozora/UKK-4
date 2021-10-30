@@ -1,7 +1,7 @@
 const express = require("express")
 const multer = require("multer")
 // const { ENUM } = require("sequelize/types")
-const {LelangStatus} = require("./lelang.enum")
+const LelangStatus = require("./lelang.enum")
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -13,7 +13,8 @@ const status = require('http-status');
 const checkLastPrice = async(time,timestamp,id) => {
     const job = new CronJob(time, async () => {
             const data = await history_lelang.findAll({where:{id:id}})
-            const {harga_akhir} = await lelang.findOne({where:{id:id}}).dataValues
+            const result = await lelang.findOne({where:{id:id}})
+            const {harga_akhir} = result.dataValues 
             const now = new Date().getTime()
             let max = harga_akhir,id_masyarakat = null,before = harga_akhir
             
@@ -26,12 +27,12 @@ const checkLastPrice = async(time,timestamp,id) => {
                 data.forEach(e=>{
                     if(e.price > max){
                         max = e.penawaran_harga
-                        id_masyarakat = e.user_id
+                        id_masyarakat = e.id_masyarakat
                     }
                 })
-                if(max !== before){
+                
                     await lelang.update({harga_akhir:max,id_masyarakat:id_masyarakat},{where:{id:id}})
-                }
+                
             }
         
     });      
@@ -39,17 +40,19 @@ const checkLastPrice = async(time,timestamp,id) => {
 }
 
 app.put("/:id/start",async(req,res)=>{
-    const resultLelang = await lelang.findOne({id:req.params.id}),temp = resultLelang.dataValues
+    const resultLelang = await lelang.findOne({where:{id:req.params.id}}),temp = resultLelang.dataValues
     const now = new Date(),hours = now.setHours(now.getHours() + 1)
     temp.status = LelangStatus.DIBUKA
     temp.tgl_lelang = now
     await lelang.update(temp,{where:{id:temp.id}})
-    await checkLastPrice('*/30 * * * * *',expired,temp.id) // cek and update lelang
+    await checkLastPrice('*/30 * * * * *',hours,temp.id) // cek and update lelang
 })
 
 app.post("/bid", async (req, res) => {
     let current = new Date().toISOString().split('T')[0]
-    const {id_lelang,id_masyarakat,penawaran_harga} = req.body,{harga_akhir,status} = await lelang.findOne({where:{id:id_lelang}}).dataValues
+    const {id_lelang,id_masyarakat,penawaran_harga} = req.body
+    const result = await lelang.findOne({where:{id:id_lelang}})
+    const {harga_akhir,status} = result.dataValues
     const data = {
         id_lelang:id_lelang,
         id_masyarakat:id_masyarakat,
