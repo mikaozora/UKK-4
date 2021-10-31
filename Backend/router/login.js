@@ -2,7 +2,7 @@ const express = require("express")
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-const SECRET_KEY = "Lelang"
+let SECRET_KEY = "Lelang"
 const model = require("../models/index")
 const petugas = model.petugas
 const masyarakat = model.masyarakat
