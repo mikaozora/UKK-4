@@ -35,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
         id_masyarakat: DataTypes.INTEGER,
         id_petugas: DataTypes.INTEGER,
         status: DataTypes.ENUM("Dibuka", "Ditutup"),
+        endtime: DataTypes.DATE
     }, {
         sequelize,
         modelName: "lelang",
