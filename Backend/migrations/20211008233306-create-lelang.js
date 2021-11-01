@@ -46,7 +46,7 @@ module.exports = {
                 defaultValue: "Ditutup",
             },
             endtime: {
-                type: sequelize.DATE,
+                type: Sequelize.DATE,
                 allowNull: true
             },
             createdAt: {
