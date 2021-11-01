@@ -1,4 +1,7 @@
 "use strict"
+
+const { sequelize } = require("../models")
+
 module.exports = {
     up: async(queryInterface, Sequelize) => {
         await queryInterface.createTable("lelang", {
@@ -41,6 +44,10 @@ module.exports = {
             status: {
                 type: Sequelize.ENUM("Dibuka", "Ditutup"),
                 defaultValue: "Ditutup",
+            },
+            endtime: {
+                type: sequelize.DATE,
+                allowNull: true
             },
             createdAt: {
                 allowNull: false,
