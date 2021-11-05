@@ -8,7 +8,8 @@ app.use(express.urlencoded({ extended: true }))
 const CronJob = require('cron').CronJob;
 const lelang = require("../models/index").lelang
 const history_lelang = require("../models/index").history_lelang
-const status = require('http-status');
+const HttpStatus = require('http-status');
+const barang = require("../models/index").barang
 
 const checkLastPrice = async(time,timestamp,id) => {
     let job = new CronJob(time, async () => {
@@ -22,40 +23,52 @@ const checkLastPrice = async(time,timestamp,id) => {
             const now = new Date().getTime()
             let max = harga_akhir,new_id_masyarakat = null,before = harga_akhir
 
-            if(max > before){
-                    await lelang.update({harga_akhir:max,id_masyarakat:new_id_masyarakat,status:LelangStatus.DITUTUP},{where:{id:id}})
+            if(now > timestamp){
+                    await lelang.update({status:LelangStatus.DITUTUP},{where:{id:id}})
             }
-            if(data){
-                data.forEach(e=>{
-                    if(e.penawaran_harga > max){
-                        max = e.penawaran_harga
-                        new_id_masyarakat = e.id_masyarakat
-                    }
-                })
+            // console.log(now,timestamp);
+            // if(data){
+            //     data.forEach(e=>{
+            //         if(e.penawaran_harga > max){
+            //             max = e.penawaran_harga
+            //             new_id_masyarakat = e.id_masyarakat
+            //         }
+            //     })
                 
-                if(!new_id_masyarakat){
-                        new_id_masyarakat = id_masyarakat
-                }
-            }
+            //     if(!new_id_masyarakat){
+            //             new_id_masyarakat = id_masyarakat
+            //     }
+            //     await lelang.update({harga_akhir:max,id_masyarakat:new_id_masyarakat},{where:{id:id}})
+            // }
     });      
     job.start()
 }
 
 app.put("/:id/start",async(req,res)=>{
-    const resultLelang = await lelang.findOne({where:{id:req.params.id}}),temp = resultLelang.dataValues
-    const now = new Date(),minutes = now.getTime()+120,{endTime} = req.body
+    const resultLelang = await lelang.findOne({where:{id:req.params.id}}),
+    temp = resultLelang.dataValues
+    const now = new Date().getTime(),
+    // minutes = now.getTime()+ (5*60000),
+    {endtime} = req.body
+    let end = new Date(endtime)
+    let timestamp = end.getTime()
     //hours = now.setHours(now.getHours() + 1)
     temp.status = LelangStatus.DIBUKA
+    
     temp.tgl_lelang = now
-    await lelang.update(temp,{where:{id:temp.id,endTime:endTime,tgl_lelang:now}})
-    await checkLastPrice('*/30 * * * * *',minutes,temp.id) // cek and update lelang
-    res.status(200).send("lelang started")
+    temp.endtime = end
+    console.log(timestamp, now);
+    await lelang.update(temp,{where:{id:temp.id}})
+    await checkLastPrice('*/30 * * * * *',timestamp,temp.id) // cek and update lelang
+    res.send(200, {
+        message: "lelang dibuka"
+    })
 })
 
 app.post("/bid", async (req, res) => {
-    let current = new Date().toISOString().split('T')[0]
     const {id_lelang,id_masyarakat,penawaran_harga} = req.body
     const result = await lelang.findOne({where:{id:id_lelang}})
+    console.log(result);
     const {harga_akhir,status} = result.dataValues
     const data = {
         id_lelang:id_lelang,
@@ -70,7 +83,7 @@ app.post("/bid", async (req, res) => {
         })
     }
 
-    if(harga_akhir > penawaran_harga){
+    if(harga_akhir >= penawaran_harga){
         return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
             error:
             "sorry,penawaran harga kurang dari harga akhir!",
@@ -79,6 +92,7 @@ app.post("/bid", async (req, res) => {
     }
 
     history_lelang.create(data)
+    await lelang.update({harga_akhir:penawaran_harga,id_masyarakat:id_masyarakat},{where:{id:id_lelang}})
     .then(result => {
         res.json({
             message: "Data berhasil ditambahkan",
@@ -90,6 +104,7 @@ app.post("/bid", async (req, res) => {
                 message: error.message
             })
         })
+        
 
 })
 
@@ -110,10 +125,11 @@ app.get("/", async (req, res) => {
 
 app.get("/:id", async (req, res) => {
     const param = {
-        id_lelang: req.params.id
+        id: req.params.id
     }
     await lelang.findOne({ where: param })
         .then(result => {
+            console.log(new Date(result.dataValues.endtime));
             res.json({
                 data: result
             })
@@ -125,6 +141,7 @@ app.get("/:id", async (req, res) => {
 })
 
 app.post("/", async (req, res) => {
+    let current = new Date().toISOString().split('T')[0]
     const {id_barang,tgl_lelang,id_petugas} = req.body
     const result = await barang.findOne({where:{id:id_barang}}),{harga_awal} = result.dataValues
     let data = {
