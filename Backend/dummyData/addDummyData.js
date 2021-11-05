@@ -17,9 +17,5 @@ addData = () => {
     console.log("insering table masyarakat :")
     res_masyarakat ? console.log('success') : console.log("failed")
 
-    let res_lelang = models.lelang.bulkCreate(lelang)
-    console.log("insering table lelang :")
-    res_lelang ? console.log('success') : console.log("failed")
-
 }
 addData()
