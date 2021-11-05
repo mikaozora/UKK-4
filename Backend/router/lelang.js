@@ -9,7 +9,6 @@ const CronJob = require('cron').CronJob;
 const lelang = require("../models/index").lelang
 const history_lelang = require("../models/index").history_lelang
 const status = require('http-status');
-const redis = require("../redis")
 
 const checkLastPrice = async(time,timestamp,id) => {
     let job = new CronJob(time, async () => {
@@ -19,39 +18,37 @@ const checkLastPrice = async(time,timestamp,id) => {
                 data.push(element.dataValues)
             });
             result = await lelang.findOne({where:{id:id}})
-            const {harga_akhir} = result.dataValues 
+            const {harga_akhir,id_masyarakat} = result.dataValues 
             const now = new Date().getTime()
-            let max = harga_akhir,id_masyarakat = null,before = harga_akhir
-            
-            if(now >= timestamp){
-            await lelang.update({harga_akhir:max,id_masyarakat:id_masyarakat,status:LelangStatus.DITUTUP},{where:{id:id}})
-            job.stop()
-            }
+            let max = harga_akhir,new_id_masyarakat = null,before = harga_akhir
 
+            if(max > before){
+                    await lelang.update({harga_akhir:max,id_masyarakat:new_id_masyarakat,status:LelangStatus.DITUTUP},{where:{id:id}})
+            }
             if(data){
                 data.forEach(e=>{
                     if(e.penawaran_harga > max){
                         max = e.penawaran_harga
-                        id_masyarakat = e.id_masyarakat
+                        new_id_masyarakat = e.id_masyarakat
                     }
                 })
-                if(max > before){
-                    await lelang.update({harga_akhir:max,id_masyarakat:id_masyarakat},{where:{id:id}})
+                
+                if(!new_id_masyarakat){
+                        new_id_masyarakat = id_masyarakat
                 }
             }
     });      
     job.start()
-    return job
 }
 
 app.put("/:id/start",async(req,res)=>{
     const resultLelang = await lelang.findOne({where:{id:req.params.id}}),temp = resultLelang.dataValues
-    const now = new Date(),hours = now.setHours(now.getHours() + 1)
+    const now = new Date(),minutes = now.getTime()+120,{endTime} = req.body
+    //hours = now.setHours(now.getHours() + 1)
     temp.status = LelangStatus.DIBUKA
     temp.tgl_lelang = now
-    redis.set(`${temp.id}`,`${hours}`,'EX',3600)
-    await lelang.update(temp,{where:{id:temp.id}})
-    await checkLastPrice('*/30 * * * * *',hours,temp.id) // cek and update lelang
+    await lelang.update(temp,{where:{id:temp.id,endTime:endTime,tgl_lelang:now}})
+    await checkLastPrice('*/30 * * * * *',minutes,temp.id) // cek and update lelang
     res.status(200).send("lelang started")
 })
 
@@ -128,13 +125,13 @@ app.get("/:id", async (req, res) => {
 })
 
 app.post("/", async (req, res) => {
-    let current = new Date().toISOString().split('T')[0]
+    const {id_barang,tgl_lelang,id_petugas} = req.body
+    const result = await barang.findOne({where:{id:id_barang}}),{harga_awal} = result.dataValues
     let data = {
-        id_barang: req.body.id_barang,
+        id_barang: id_barang,
         tgl_lelang: current,
-        harga_akhir: req.body.harga_akhir,
-        id_masyarakat: req.body.id_masyarakat,
-        id_petugas: req.body.id_petugas,
+        harga_akhir: harga_awal,
+        id_petugas: id_petugas,
         status: LelangStatus.DITUTUP
     }
     lelang.create(data)
@@ -151,6 +148,7 @@ app.post("/", async (req, res) => {
         })
 
 })
+
 app.put("/", async (req, res) => {
     let param = {
         id_lelang: req.params.id_lelang

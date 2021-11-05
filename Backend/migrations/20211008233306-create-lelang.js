@@ -21,13 +21,15 @@ module.exports = {
             },
             tgl_lelang: {
                 type: Sequelize.DATE,
+                allowNull:true
             },
             harga_akhir: {
                 type: Sequelize.INTEGER,
+                allowNull:true
             },
             id_masyarakat: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
+                allowNull: true,
                 references: {
                     model: "masyarakat",
                     key: "id",
