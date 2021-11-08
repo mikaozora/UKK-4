@@ -8,7 +8,7 @@ const masyarakat = require("../models/index").masyarakat
 const jwt = require("jsonwebtoken")
 const auth = require("../auth")
 
-app.get("/", auth('petugas', 'admin', 'masyarakat') ,async (req, res) => {
+app.get("/", auth('petugas', 'admin'), async(req, res) => {
     await masyarakat.findAll()
         .then(result => {
             res.json({
@@ -21,7 +21,7 @@ app.get("/", auth('petugas', 'admin', 'masyarakat') ,async (req, res) => {
         })
 })
 
-app.get("/:id", auth('petugas', 'admin', 'masyarakat'), async (req, res) => {
+app.get("/:id", auth('petugas', 'admin', 'masyarakat'), async(req, res) => {
     const param = {
         id: req.params.id
     }
@@ -37,7 +37,7 @@ app.get("/:id", auth('petugas', 'admin', 'masyarakat'), async (req, res) => {
         })
 })
 
-app.post("/registrasi", auth('admin', 'masyarakat'), async (req, res) => {
+app.post("/registrasi", async(req, res) => {
     const data = {
         nama: req.body.nama,
         username: req.body.username,
@@ -57,7 +57,7 @@ app.post("/registrasi", auth('admin', 'masyarakat'), async (req, res) => {
         })
 })
 
-app.put("/", auth('admin', 'masyarakat'), async (req, res) => {
+app.put("/", auth('admin', 'masyarakat'), async(req, res) => {
     const param = {
         id: req.body.id
     }
@@ -87,7 +87,7 @@ app.put("/", auth('admin', 'masyarakat'), async (req, res) => {
         })
 })
 
-app.delete("/:id", auth('admin', 'masyarakat'), async (req, res) => {
+app.delete("/:id", auth('admin', 'masyarakat'), async(req, res) => {
     const param = {
         id: req.params.id
     }
