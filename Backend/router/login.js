@@ -23,10 +23,16 @@ app.post("/", async (req, res) => {
         req.body.level == undefined
     ) {
         result = await masyarakat.findOne({ where: param })
-        SECRET_KEY = "hoi"
+        
+        if(result){
+            result.dataValues.level = 'masyarakat'
+            console.log(result);
+        }
+        
     } else if (req.body.level == "petugas" || req.body.level == "admin") {
         param.level = req.body.level
         result = await petugas.findOne({ where: param })
+        console.log(result);
     }
     if (result) {
         let payload = JSON.stringify(result)

@@ -10,6 +10,7 @@ const lelang = require("../models/index").lelang
 const history_lelang = require("../models/index").history_lelang
 const HttpStatus = require('http-status');
 const barang = require("../models/index").barang
+const auth = require('../auth')
 
 const checkLastPrice = async(time,timestamp,id) => {
     let job = new CronJob(time, async () => {
@@ -44,7 +45,7 @@ const checkLastPrice = async(time,timestamp,id) => {
     job.start()
 }
 
-app.put("/:id/start",async(req,res)=>{
+app.put("/:id/start", auth('petugas'),async(req,res)=>{
     const resultLelang = await lelang.findOne({where:{id:req.params.id}}),
     temp = resultLelang.dataValues
     const now = new Date().getTime(),
@@ -65,7 +66,7 @@ app.put("/:id/start",async(req,res)=>{
     })
 })
 
-app.post("/bid", async (req, res) => {
+app.post("/bid", auth('masyarakat'),async (req, res) => {
     const {id_lelang,id_masyarakat,penawaran_harga} = req.body
     const result = await lelang.findOne({where:{id:id_lelang}})
     console.log(result);
@@ -109,7 +110,7 @@ app.post("/bid", async (req, res) => {
 })
 
 
-app.get("/", async (req, res) => {
+app.get("/", auth('petugas', 'admin', 'masyarakat'),async (req, res) => {
     await lelang.findAll()
         .then(result => {
             res.json({
@@ -123,7 +124,7 @@ app.get("/", async (req, res) => {
         })
 })
 
-app.get("/:id", async (req, res) => {
+app.get("/:id", auth('petugas', 'admin', 'masyarakat') ,async (req, res) => {
     const param = {
         id: req.params.id
     }
@@ -140,7 +141,7 @@ app.get("/:id", async (req, res) => {
         })
 })
 
-app.post("/", async (req, res) => {
+app.post("/", auth('petugas', 'admin', 'masyarakat'),async (req, res) => {
     let current = new Date().toISOString().split('T')[0]
     const {id_barang,tgl_lelang,id_petugas} = req.body
     const result = await barang.findOne({where:{id:id_barang}}),{harga_awal} = result.dataValues
@@ -166,7 +167,7 @@ app.post("/", async (req, res) => {
 
 })
 
-app.put("/", async (req, res) => {
+app.put("/", auth('petugas', 'admin'),async (req, res) => {
     let param = {
         id_lelang: req.params.id_lelang
     }
@@ -192,7 +193,7 @@ app.put("/", async (req, res) => {
         })
 })
 
-app.delete("/:id_lelang", async (req, res) => {
+app.delete("/:id_lelang", auth('petugas', 'admin'),async (req, res) => {
     let param = {
         id_lelang: req.params.id_lelang
     }

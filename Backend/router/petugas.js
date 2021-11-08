@@ -8,11 +8,11 @@ app.use(express.urlencoded({ extended: true }))
 const petugas = require("../models/index").petugas
 
 const md5 = require("md5")
-const auth = require("../auth")
 const jwt = require("jsonwebtoken") 
 const SECRET_KEY = "Lelang"
+const auth = require("../auth")
 
-app.get("/", auth, async (req, res) => {
+app.get("/", auth('petugas', 'admin'), async (req, res) => {
     await petugas.findAll()
         .then(result => {
             res.json({
@@ -26,7 +26,7 @@ app.get("/", auth, async (req, res) => {
         })
 })
 
-app.get("/:id", auth, async (req, res) => {
+app.get("/:id", auth('petugas', 'admin'), async (req, res) => {
     const param = {
         petugas: req.params.id
     }
@@ -42,7 +42,7 @@ app.get("/:id", auth, async (req, res) => {
         })
 })
 
-app.post("/", auth, async (req, res) => {
+app.post("/", auth('petugas', 'admin'), async (req, res) => {
     const data = {
         nama_petugas: req.body.nama_petugas,
         username: req.body.username,
@@ -63,7 +63,7 @@ app.post("/", auth, async (req, res) => {
         })
 })
 
-app.put("/", auth, async (req, res) => {
+app.put("/", auth('petugas', 'admin'), async (req, res) => {
     const param = {
         id: req.body.id
     }
@@ -93,7 +93,7 @@ app.put("/", auth, async (req, res) => {
         })
 })
 
-app.delete("/:id", auth, async (req, res) => {
+app.delete("/:id", auth('petugas', 'admin'), async (req, res) => {
     const param = {
         petugas: req.params.id
     }
@@ -109,55 +109,5 @@ app.delete("/:id", auth, async (req, res) => {
             })
         })
 })
-
-app.post("/petugas/login", async (req, res) => {
-    const param = {
-        username: req.body.username,
-        password: md5(req.body.password),
-        level: "petugas"
-    }
-    let result = await petugas.findOne({ where: param })
-    if (result) {
-        let payload = JSON.stringify(result)
-        // generate token
-        let token = jwt.sign(payload, SECRET_KEY)
-        res.json({
-            logged: true,
-            data: result,
-            token: token
-        })
-    } else {
-        res.json({
-            logged: false,
-            message: "Invalid username or password"
-        })
-    }
-})
-
-app.post("/admin/login", async (req, res) => {
-    const param = {
-        username: req.body.username,
-        password: md5(req.body.password),
-        level: "admin"
-    }
-
-    let result = await petugas.findOne({ where: param })
-    if (result) {
-        let payload = JSON.stringify(result)
-        // generate token
-        let token = jwt.sign(payload, SECRET_KEY)
-        res.json({
-            logged: true,
-            data: result,
-            token: token
-        })
-    } else {
-        res.json({
-            logged: false,
-            message: "Invalid username or password"
-        })
-    }
-})
-
 
 module.exports = app

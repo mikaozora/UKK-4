@@ -6,10 +6,9 @@ app.use(express.urlencoded({ extended: true }))
 
 const masyarakat = require("../models/index").masyarakat
 const jwt = require("jsonwebtoken")
-const SECRET_KEY = "Lelang"
 const auth = require("../auth")
 
-app.get("/", auth ,async (req, res) => {
+app.get("/", auth('petugas', 'admin', 'masyarakat') ,async (req, res) => {
     await masyarakat.findAll()
         .then(result => {
             res.json({
@@ -22,7 +21,7 @@ app.get("/", auth ,async (req, res) => {
         })
 })
 
-app.get("/:id", auth, async (req, res) => {
+app.get("/:id", auth('petugas', 'admin', 'masyarakat'), async (req, res) => {
     const param = {
         id: req.params.id
     }
@@ -38,7 +37,7 @@ app.get("/:id", auth, async (req, res) => {
         })
 })
 
-app.post("/", auth, async (req, res) => {
+app.post("/registrasi", auth('admin', 'masyarakat'), async (req, res) => {
     const data = {
         nama: req.body.nama,
         username: req.body.username,
@@ -58,7 +57,7 @@ app.post("/", auth, async (req, res) => {
         })
 })
 
-app.put("/", auth, async (req, res) => {
+app.put("/", auth('admin', 'masyarakat'), async (req, res) => {
     const param = {
         id: req.body.id
     }
@@ -88,7 +87,7 @@ app.put("/", auth, async (req, res) => {
         })
 })
 
-app.delete("/:id", auth, async (req, res) => {
+app.delete("/:id", auth('admin', 'masyarakat'), async (req, res) => {
     const param = {
         id: req.params.id
     }
@@ -104,27 +103,4 @@ app.delete("/:id", auth, async (req, res) => {
         })
 })
 
-app.post("/login", async (req, res) => {
-    const param = {
-        username: req.body.username,
-        password: md5(req.body.password)
-    }
-
-    let result = await masyarakat.findOne({ where: param })
-    if (result) {
-        let payload = JSON.stringify(result)
-        // generate token
-        let token = jwt.sign(payload, SECRET_KEY)
-        res.json({
-            logged: true,
-            data: result,
-            token: token
-        })
-    } else {
-        res.json({
-            logged: false,
-            message: "Invalid username or password"
-        })
-    }
-})
 module.exports = app
