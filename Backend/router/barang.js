@@ -21,9 +21,7 @@ let upload = multer({ storage: storage })
 app.get("/", async (req, res) => {
     await barang.findAll()
         .then(result => {
-            res.json({
-                data: result
-            })
+            res.json(result)
         }).catch(err => {
             res.json({
                 message: err.message
@@ -46,7 +44,6 @@ app.get("/:id", async (req, res) => {
             })
         })
 })
-
 app.post("/", upload.single("image"), async (req, res) => {
     if (!req.file) {
         res.json({
