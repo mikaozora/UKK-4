@@ -1,5 +1,6 @@
 import React from "react"
 import {Link} from "react-router-dom"
+import 'bootstrap'
 class Navbar extends React.Component{
     // Logout= () =>{
     //     localStorage.removeItem("token")
@@ -28,6 +29,11 @@ class Navbar extends React.Component{
                         <li className="nav-item">
                             <Link to="/barang" className="nav-link">
                                 Barang
+                            </Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link to="/lelang" className="nav-link">
+                                Lelang
                             </Link>
                         </li>
                         <li className="nav-item">

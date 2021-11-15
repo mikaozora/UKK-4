@@ -2,7 +2,7 @@ import React from "react"
 import Navbar from "../components/Navbar"
 import axios from "axios"
 import { base_url } from "../config.js"
-import $ from "jquery"
+import $ from 'jquery'; // <-to import jquery
 
 export default class Barang extends React.Component{
     constructor(){
@@ -16,7 +16,8 @@ export default class Barang extends React.Component{
             tgl: "",
             harga_awal: "",
             deskripsi: "",
-            image: ""
+            image: "",
+            uploadFile: true,
         }
 
         // if (localStorage.getItem("token")) {
@@ -67,7 +68,8 @@ export default class Barang extends React.Component{
             tgl: "",
             harga_awal: "",
             deskripsi: "",
-            // image: ""
+            image: null,
+            uploadFile: true
         })
     }
 
@@ -79,20 +81,32 @@ export default class Barang extends React.Component{
             nama_barang: selectedItem.nama_barang,
             tgl: selectedItem.tgl,
             harga_awal: selectedItem.harga_awal,
-            deskripsi: selectedItem.deskripsi
-            // image: selectedItem.image
+            deskripsi: selectedItem.deskripsi,
+            image: null,
+            uploadFile: false
         })
     }
 
     saveBarang = event => {
         event.preventDefault()
-        let form = {
-            id: this.state.id,
-            nama_barang: this.state.nama_barang,
-            tgl: this.state.tgl,
-            harga_awal: this.state.harga_awal,
-            deskripsi: this.state.deskripsi
+        let form = new FormData()
+        form.append("id", this.state.id)
+        form.append("nama_barang", this.state.nama_barang)
+        form.append("tgl", this.state.tgl)
+        form.append("harga_awal", this.state.harga_awal)
+        form.append("deskripsi", this.state.deskripsi)
+        if (this.state.uploadFile) {
+            form.append("image", this.state.image)
         }
+        // let form = {
+        //     id: this.state.id,
+        //     nama_barang: this.state.nama_barang,
+        //     tgl: this.state.tgl,
+        //     harga_awal: this.state.harga_awal,
+        //     deskripsi: this.state.deskripsi,
+        //     u: this.state.uploadFile
+        //         form.append("image", this.state.image)
+        // }
       
 
         let url = base_url + "/api/v1/barang"
@@ -109,7 +123,7 @@ export default class Barang extends React.Component{
             // , this.headerConfig()
             .then(response => {
                 window.alert(response.data.message)
-                this.getbarang()
+                this.getBarang()
             })
             .catch(error => console.log(error))
         }
@@ -144,7 +158,8 @@ export default class Barang extends React.Component{
                                 <th>Tanggal Upload</th>
                                 <th>Harga Awal</th>
                                 <th>Deskripsi</th>
-                                {/* <th>Image</th> */}
+                                <th>Image</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         { this.state.barang.map( item => (
@@ -155,12 +170,15 @@ export default class Barang extends React.Component{
                                     <td>{item.tgl}</td>
                                     <td>{item.harga_awal}</td>
                                     <td>{item.deskripsi}</td>
+                                    <td><img src={base_url+'/api/v1/barang_image/'+item.image} style={{width: "200px",
+                                        height: "200px",objectFit:"cover"}}></img>
+                                    </td>
                                     <td>
-                                        <div class="btn-group btn-group-toggle">
-                                            <label class="btn btn-primary" onClick={() => this.Edit(item)} >
+                                        <div className="btn-group btn-group-toggle">
+                                            <label className="btn btn-primary" onClick={() => this.Edit(item)} >
                                                 Edit
                                             </label>
-                                            <label class="btn btn-danger" onClick={() => this.dropBarang(item)}>
+                                            <label className="btn btn-danger" onClick={() => this.dropBarang(item)}>
                                                 Delete
                                             </label>
                                         </div>
@@ -204,6 +222,20 @@ export default class Barang extends React.Component{
                                      onChange={ev => this.setState({deskripsi: ev.target.value})}
                                      required
                                      />
+                                     { this.state.action === "update" && this.state.uploadFile === false ? (
+                                        <button className="btn btn-sm btn-dark mb-1 btn-block"
+                                        onClick={() => this.setState({uploadFile: true})}>
+                                            Change Product Image
+                                        </button>
+                                    ) : (
+                                        <div>
+                                            Product Image
+                                            <input type="file" className="form-control mb-1"
+                                            onChange={ev => this.setState({image: ev.target.files[0]})}
+                                            required
+                                            />
+                                        </div>
+                                    ) }
                                     <button type="submit" className="btn btn-block btn-dark">
                                         Simpan
                                     </button>

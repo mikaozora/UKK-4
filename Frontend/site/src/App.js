@@ -3,6 +3,7 @@ import { Switch, Route } from "react-router-dom"
 import Home from "./pages/Home"
 import History from "./pages/History"
 import Barang from "./pages/Barang"
+import Lelang from "./pages/Lelang"
 
 export default class App extends React.Component{
   render(){
@@ -11,6 +12,7 @@ export default class App extends React.Component{
           <Route exact path="/" component={Home}/>
           <Route path="/history" component={History}/>
           <Route path="/barang" component={Barang}/>
+          <Route path="/lelang" component={Lelang}/>
       </Switch>
     )
   }

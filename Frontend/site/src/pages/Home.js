@@ -2,6 +2,7 @@ import React from "react"
 import Navbar from "../components/Navbar"
 import axios from "axios"
 import { base_url } from "../config.js"
+import 'bootstrap'
 
 export default class Home extends React.Component{
     constructor(){
@@ -11,6 +12,7 @@ export default class Home extends React.Component{
             petugasName: null,
             dataBarang: 0,
             dataLelang: 0,
+            dataHistory: 0
             
         }
 
@@ -70,11 +72,30 @@ export default class Home extends React.Component{
         })
     }
 
+    getHistory = () => {
+        let url = base_url + "/api/v1/history_lelang"
+        axios.get(url)
+        .then(response=> {
+            this.setState({dataHistory: response.data.data.length})
+        })
+        .catch(error => {
+            if (error.response) {
+                if(error.response.status) {
+                    window.alert(error.response.data.message)
+                    // this.props.history.push("/login")
+                }
+            }else{
+                console.log(error);
+            }
+        })
+    }
+
 
     componentDidMount(){
         // this.getPetugas()
         this.getBarang()
         this.getLelang()
+        this.getHistory()
     }
 
     render(){
@@ -110,6 +131,20 @@ export default class Home extends React.Component{
                                     </h4>
                                     <h1 className="text-white">
                                         <strong>{this.state.dataLelang}</strong>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* history count */}
+                        <div className="col-lg-4 col-md-6 col-sm-12 mt-2">
+                            <div className="card">
+                                <div className="card-body bg-dark">
+                                    <h4 className="text-white">
+                                        <strong>Data History</strong>
+                                    </h4>
+                                    <h1 className="text-white">
+                                        <strong>{this.state.dataHistory}</strong>
                                     </h1>
                                 </div>
                             </div>

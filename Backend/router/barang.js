@@ -7,7 +7,7 @@ const fs = require('fs')
 const path = require("path")
 
 const barang = require("../models/index").barang
-const current = new Date().toISOString().split('T')[0]
+const current = new Date()
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, "./barang_image")
