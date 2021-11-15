@@ -5,10 +5,9 @@ app.use(express.urlencoded({ extended: true }))
 const multer = require('multer')
 const fs = require('fs')
 const path = require("path")
-const auth = require('../auth')
 
 const barang = require("../models/index").barang
-const current = new Date().toISOString().split('T')[0]
+const current = new Date()
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, "./barang_image")
@@ -19,7 +18,7 @@ const storage = multer.diskStorage({
 })
 let upload = multer({ storage: storage })
 
-app.get("/", auth('petugas', 'admin', 'masyarakat'),async (req, res) => {
+app.get("/", async (req, res) => {
     await barang.findAll()
         .then(result => {
             res.json({
@@ -32,7 +31,7 @@ app.get("/", auth('petugas', 'admin', 'masyarakat'),async (req, res) => {
         })
 })
 
-app.get("/:id", auth('petugas', 'admin'),async (req, res) => {
+app.get("/:id", async (req, res) => {
     const param = {
         id: req.params.id
     }
@@ -48,7 +47,7 @@ app.get("/:id", auth('petugas', 'admin'),async (req, res) => {
         })
 })
 
-app.post("/", upload.single("image"), auth('petugas', 'admin'), async (req, res) => {
+app.post("/", upload.single("image"), async (req, res) => {
     if (!req.file) {
         res.json({
             message: "Anda belum menambahkan gambar barang"
@@ -76,7 +75,7 @@ app.post("/", upload.single("image"), auth('petugas', 'admin'), async (req, res)
 
 })
 
-app.put("/", upload.single('image'), auth('petugas', 'admin'),async (req, res) => {
+app.put("/", upload.single('image'), async (req, res) => {
     const param = {
         id: req.body.id
     }
@@ -115,7 +114,7 @@ app.put("/", upload.single('image'), auth('petugas', 'admin'),async (req, res) =
         })
 })
 
-app.delete("/:id", auth('petugas', 'admin'),async (req, res) => {
+app.delete("/:id", async (req, res) => {
     const param = {
         id: req.params.id
     }
@@ -136,5 +135,6 @@ app.delete("/:id", auth('petugas', 'admin'),async (req, res) => {
             })
         })
 })
+
 
 module.exports = app
