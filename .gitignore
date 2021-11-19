@@ -2,3 +2,4 @@ Backend/node_modules/
 Frontend/node_modules/
 /node_modules
 /backend/barang_image/*
+!/backend/barang_image/empty.svg
