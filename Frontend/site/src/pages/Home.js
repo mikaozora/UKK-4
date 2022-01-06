@@ -37,7 +37,7 @@ export default class Home extends React.Component{
     }
 
     getBarang = () => {
-        let url = base_url + "/api/v1/barang"
+        let url = base_url + "/barang"
         axios.get(url)
         .then(response=> {
             this.setState({dataBarang: response.data.data.length})
@@ -55,7 +55,7 @@ export default class Home extends React.Component{
     }
 
     getLelang = () => {
-        let url = base_url + "/api/v1/lelang"
+        let url = base_url + "/lelang"
         axios.get(url)
         .then(response=> {
             this.setState({dataLelang: response.data.data.length})
@@ -73,7 +73,7 @@ export default class Home extends React.Component{
     }
 
     getHistory = () => {
-        let url = base_url + "/api/v1/history_lelang"
+        let url = base_url + "/history_lelang"
         axios.get(url)
         .then(response=> {
             this.setState({dataHistory: response.data.data.length})
@@ -105,7 +105,7 @@ export default class Home extends React.Component{
                 <Navbar />
                 <div className="container mt-2">
                     <h3 className="my-2">
-                        <strong>Welcome back, {this.state.petugasName}</strong>
+                        <strong>Welcome back, Petugas {this.state.petugasName}</strong>
                     </h3>
                     <div className="row">
                         {/* barang count */}
