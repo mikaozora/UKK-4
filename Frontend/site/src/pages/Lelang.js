@@ -38,7 +38,7 @@ export default class Lelang extends React.Component{
     // }
 
     getLelang = () => {
-        let url = base_url + "/api/v1/lelang"
+        let url = base_url + "/lelang"
         axios.get(url) 
         // this.headerConfig() 
         .then(response=> {
@@ -90,7 +90,7 @@ export default class Lelang extends React.Component{
         })
     }
 
-    savelelang = event => {
+    saveLelang = event => {
         event.preventDefault()
         let form = {
             id: this.state.id,
@@ -104,7 +104,7 @@ export default class Lelang extends React.Component{
         }
       
 
-        let url = base_url + "/api/v1/lelang"
+        let url = base_url + "/lelang"
         if (this.state.action === "insert") {
             axios.post(url, form)
             // , this.headerConfig()
@@ -127,7 +127,7 @@ export default class Lelang extends React.Component{
 
     dropLelang= selectedItem => {
         if (window.confirm("are you sure will delete this item?")) {
-            let url = base_url + "/api/v1/lelang/" + selectedItem.id
+            let url = base_url + "/lelang/" + selectedItem.id
             axios.delete(url)
             // , this.headerConfig()
             .then(response => {
@@ -184,13 +184,13 @@ export default class Lelang extends React.Component{
                     </table>
                     </div>
                     <button className="btn btn-dark" onClick={() => this.Add()}>
-                        Tambah Barang
+                       Lelang Baru
                    </button>
                    <br></br>
                    <br></br>
                 </div>
 
-                {/* modal Barang */}
+                {/* modal Lelang */}
                 <div className="modal fade" id="modal_lelang">
                      <div className="modal-dialog">
                          <div className="modal-content">
@@ -198,23 +198,47 @@ export default class Lelang extends React.Component{
                                  <h4>Form Data Lelang</h4>
                              </div>
                              <div className="modal-body">
-                                 <form onSubmit={ev => this.saveBarang(ev)}>
-                                     Nama Barang
+                                 <form onSubmit={ev => this.saveLelang(ev)}>
+                                     ID Barang
                                      <input type="text" className="form-control mb-1"
-                                     value={this.state.nama_barang}
-                                     onChange={ev => this.setState({nama_barang: ev.target.value})}
+                                     value={this.state.id_barang}
+                                     onChange={ev => this.setState({id_barang: ev.target.value})}
                                      required
                                      />
-                                     Harga Awal
-                                     <input type="text" className="form-control mb-1"
-                                     value={this.state.harga_awal}
-                                     onChange={ev => this.setState({harga_awal: ev.target.value})}
+                                     Tanggal Lelang
+                                     <input type="date" className="form-control mb-1"
+                                     value={this.state.tgl_lelang}
+                                     onChange={ev => this.setState({tgl_lelang: ev.target.value})}
                                      required
                                      />
-                                     Deskripsi
+                                     Harga Akhir
                                      <input type="text" className="form-control mb-1"
-                                     value={this.state.deskripsi}
-                                     onChange={ev => this.setState({deskripsi: ev.target.value})}
+                                     value={this.state.harga_akhir}
+                                     onChange={ev => this.setState({harga_akhir: ev.target.value})}
+                                     required
+                                     />
+                                     ID Masyarakat
+                                     <input type="text" className="form-control mb-1"
+                                     value={this.state.id_masyarakat}
+                                     onChange={ev => this.setState({id_masyarakat: ev.target.value})}
+                                     required
+                                     />
+                                     ID Petugas
+                                     <input type="text" className="form-control mb-1"
+                                     value={this.state.id_petugas}
+                                     onChange={ev => this.setState({id_petugas: ev.target.value})}
+                                     required
+                                     />
+                                     Status
+                                     <input type="text" className="form-control mb-1"
+                                     value={this.state.status}
+                                     onChange={ev => this.setState({status: ev.target.value})}
+                                     required
+                                     />
+                                     EndTime
+                                     <input type="date" className="form-control mb-1"
+                                     value={this.state.endtime}
+                                     onChange={ev => this.setState({endtime: ev.target.value})}
                                      required
                                      />
                                     <button type="submit" className="btn btn-block btn-dark">

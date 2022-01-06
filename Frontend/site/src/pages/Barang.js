@@ -37,7 +37,7 @@ export default class Barang extends React.Component{
     // }
 
     getBarang = () => {
-        let url = base_url + "/api/v1/barang"
+        let url = base_url + "/barang"
         axios.get(url) 
         // this.headerConfig() 
         .then(response=> {
@@ -109,7 +109,7 @@ export default class Barang extends React.Component{
         // }
       
 
-        let url = base_url + "/api/v1/barang"
+        let url = base_url + "/barang"
         if (this.state.action === "insert") {
             axios.post(url, form)
             // , this.headerConfig()
@@ -132,7 +132,7 @@ export default class Barang extends React.Component{
 
     dropBarang= selectedItem => {
         if (window.confirm("are you sure will delete this item?")) {
-            let url = base_url + "/api/v1/barang/" + selectedItem.id
+            let url = base_url + "/barang/" + selectedItem.id
             axios.delete(url)
             // , this.headerConfig()
             .then(response => {
@@ -153,7 +153,6 @@ export default class Barang extends React.Component{
                     <table className="table table-bordered table-hover text-center">
                         <thead>
                             <tr>
-                                <th>ID Barang</th>
                                 <th>Nama Barang</th>
                                 <th>Tanggal Upload</th>
                                 <th>Harga Awal</th>
@@ -165,13 +164,12 @@ export default class Barang extends React.Component{
                         { this.state.barang.map( item => (
                             <tbody>
                                 <tr>
-                                    <td>{item.id}</td>
                                     <td>{item.nama_barang}</td>
                                     <td>{item.tgl}</td>
                                     <td>{item.harga_awal}</td>
                                     <td>{item.deskripsi}</td>
-                                    <td><img src={base_url+'/api/v1/barang_image/'+item.image} style={{width: "200px",
-                                        height: "200px",objectFit:"cover"}}></img>
+                                    <td><img src={base_url+'/barang_image/'+item.image} style={{width: "150px",
+                                        height: "150px",objectFit:"cover"}}></img>
                                     </td>
                                     <td>
                                         <div className="btn-group btn-group-toggle">
